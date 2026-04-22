@@ -1,23 +1,26 @@
 package com.spring.web.ServletExample;
 
+import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.startup.Tomcat;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.SpringBootConfiguration;
 
-@SpringBootApplication
+@SpringBootConfiguration
 public class ServletExampleApplication {
 
 	public static void main(String[] args) throws LifecycleException {
-		SpringApplication.run(ServletExampleApplication.class, args);
 
 		System.out.println("Hello");
 
 		Tomcat tomcat = new Tomcat();
+		tomcat.setPort(8080);
+
+		Context context = tomcat.addContext("", null);
+		Tomcat.addServlet(context, "HelloServlet", new HelloServlet()); //servlet name you can set you want but actual servlet is HelloServlet
+		context.addServletMappingDecoded("/hello", "HelloServlet");
+
 		tomcat.start();
 		tomcat.getServer().await();
-		
-
 	}
 
 }
